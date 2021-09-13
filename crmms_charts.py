@@ -14,29 +14,32 @@ from crmms_utils import get_tier_traces, get_bor_seal, serial_to_trace
 
 
 def get_colormap():
+    """
     return branca.colormap.StepColormap(
         ["#001889", "#AB1488", "#D24E71", "#E8853A", "#ECC000"],
         [1980, 1990, 2000, 2010, 2020],
     )
+    """
+    return branca.colormap.LinearColormap(['#FF0000', '#FFE800', '#00E9E9'], [1980, 1999, 2020])
 
 
 def get_trace_color(wy, colormap=get_colormap()):
     wy_str = str(wy)
     color_dict = {
-        "24MS MOST": "#3de12e",
-        "24MS MIN": "red",
-        "24MS MAX": "blue",
+        "24MS MOST PROB": "#3de12e",
+        "24MS MIN PROB": "red",
+        "24MS MAX PROB": "blue",
         "OBSERVED": "black",
     }
     if wy_str.isdigit():
         c = colormap.rgba_floats_tuple(int(wy_str))
-        return f"rgba({c[0] * 255}, {c[1] * 255}, {c[2] * 255}, 0.5)"
+        return f"rgba({c[0] * 255}, {c[1] * 255}, {c[2] * 255}, 1)"
     return color_dict.get(wy_str, "black")
 
 
 def get_trace_width(wy):
     wy_str = str(wy)
-    width_dict = {"24MS MOST": 4, "24MS MIN": 3, "24MS MAX": 3, "OBSERVED": 4}
+    width_dict = {"24MS MOST PROB": 4, "24MS MIN PROB": 3, "24MS MAX PROB": 3, "OBSERVED": 4}
     if wy_str.isdigit():
         return 2
     return width_dict.get(wy_str, 2)
@@ -82,13 +85,13 @@ def get_log_scale_dd():
 
 
 def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
-    show_traces = ["24MS MOST", "24MS MIN", "24MS MAX", "OBSERVED"]
+    show_traces = ["24MS MOST PROB", "24MS MIN PROB", "24MS MAX PROB", "OBSERVED"]
     visible = {True: True, False: "legendonly"}
     traces = []
     water_years = df.columns.tolist()
 
     for wy in water_years:
-        linetype = "dashdot" if str(wy).upper() in ["24MS MIN", "24MS MAX"] else "solid"
+        linetype = "dashdot" if str(wy).upper() in ["24MS MIN PROB", "24MS MAX PROB"] else "solid"
         df_temp = df[wy]
         x_vals = df_temp.index
         y_vals = df_temp.values
@@ -115,8 +118,43 @@ def create_wy_traces(df, datatype_name, units, colormap=get_colormap()):
     return traces
 
 
+def create_wy_traces_esp_grey(df, datatype_name, units, colormap=get_colormap()):
+    visible = True
+    traces = []
+    water_years = df.columns.tolist()
+
+    for wy in water_years:
+        linetype = "solid"
+        df_temp = df[wy]
+        x_vals = df_temp.index
+        y_vals = df_temp.values
+        show_trace = visible
+        color = "rgba(200,200,200,0.4)"
+        width = get_trace_width(wy)
+
+        if get_chart_type(datatype_name, units) == "bar":
+            trace = bar_trace(x_vals, y_vals, show_trace, f"{wy}")
+        else:
+            trace = scatter_trace(
+                x_vals,
+                y_vals,
+                show_trace,
+                f"{wy}",
+                color,
+                linetype,
+                width,
+                None,
+                showlegend=False,
+                hoverinfo='skip'
+            )
+        if not "esp" in f"{wy}".lower():
+            traces.append(trace)
+
+    return traces
+
+
 def create_stat_traces(df, datatype_name, units):
-    show_traces = ["50%"]  # ['10%', '50%', '90%']
+    show_traces = []  # ['10%', '50%', '90%']
     visible = {True: True, False: "legendonly"}
     color_dict = {
         "min": "rgba(255,36,57,0.6)",
@@ -148,14 +186,14 @@ def create_stat_traces(df, datatype_name, units):
             trace_name = f"{exceedance}%"
         chart_type = get_chart_type(datatype_name, units)
         if chart_type == "bar":
-            if col in ["90%", "75%", "50%", "25%", "10%"]:
+            if col in ["90%", "75%", "50%", "25%", "10%", "min", "max"]:
                 stats_trace = stats_shaded_trace(
                     x_vals, y_vals, trace_name, color, chart_type
                 )
                 traces.append(stats_trace)
             trace = bar_trace(x_vals, y_vals, show_trace, trace_name, color)
         else:
-            if col in ["90%", "75%", "50%", "25%", "10%"]:
+            if col in ["90%", "75%", "50%", "25%", "10%", "min", "max"]:
                 stats_trace = stats_shaded_trace(
                     x_vals, y_vals, trace_name, color, chart_type
                 )
@@ -198,7 +236,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
     if chart_type == "bar":
         shape = "vh"
         x, y = bar_stat_shading(x, y)
-    if "90%" in name.upper():
+    if "min" in name.lower():
         fill = "none"
         if chart_type == "bar":
             fill = "tozeroy"
@@ -214,7 +252,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
         visible=True,
         fill=fill,
         line=dict(width=0, shape=shape),
-        fillcolor="rgba(0,0,0,0.2)",  # color.replace(',0.6)', ',0.4)'),
+        fillcolor="rgba(100,100,100,.2)",  # color.replace(',0.6)', ',0.4)'),
         hoverinfo="skip",
         legendgroup="ESP CLOUD",
         connectgaps=True,
@@ -226,7 +264,7 @@ def stats_shaded_trace(x, y, name, color, chart_type):
 
 
 def scatter_trace(
-    x, y, show_trace, name, color=None, linetype="solid", width=2, hovertemplate=None
+    x, y, show_trace, name, color=None, linetype="solid", width=2, hovertemplate=None, showlegend=True, hoverinfo='text'
 ):
 
     trace = go.Scatter(
@@ -237,7 +275,9 @@ def scatter_trace(
         visible=show_trace,
         line=dict(color=color, dash=linetype, width=width),
         hovertemplate=hovertemplate,
+        hoverinfo=hoverinfo,
         mode="lines",
+        showlegend=showlegend
     )
     return trace
 
@@ -342,31 +382,41 @@ def get_comp_fig(
 
     colormap = get_colormap()
     traces = create_wy_traces(df_trace, datatype_name, units, colormap)
+    traces_grey = create_wy_traces_esp_grey(df_trace, datatype_name, units, colormap)
     stat_traces = create_stat_traces(df_stats, datatype_name, units)
     obs_trace = create_wy_traces(df_obs_trace, datatype_name, units)
 
     cloud_heading = legend_heading(
-        "CRMMS-STATS", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
+        "CRMMS-ESP Stats", legendgroup="ESP CLOUD", fillcolor="rgba(0,0,0,0)"
     )
 
     esp_yr_traces = [i for i in traces if i.name.isnumeric() or "ESP" in i.name]
+    esp_yr_traces_grey = [i for i in traces_grey if i.name.isnumeric() or "ESP" in i.name]
     twenty_four_month_traces = [i for i in traces if "24MS" in i.name]
+    ms_heading = legend_heading(
+        "24-Month Study", legendgroup="24MS", fillcolor="rgba(0,0,0,0)"
+    )
+    twenty_four_month_traces.extend(ms_heading)
 
     traces = []
     esp_traces = []
     esp_traces.extend(esp_yr_traces)
-    esp_traces.extend(legend_heading("CRMMS-ESP"))
+    esp_traces.extend(legend_heading("Individual Traces"))
     esp_traces.extend(stat_traces)
     esp_traces.extend(cloud_heading)
+    esp_traces.extend(esp_yr_traces_grey)
     if not no_esp:
         traces.extend(esp_traces)
+
+    # current-work
+    # try to add in all esp traces as grey lines that do not show up in legend
 
     traces.extend(twenty_four_month_traces)
     traces.extend(obs_trace)
 
     tier_traces = get_tier_traces(
         obs_rng[0] - relativedelta(years=1),
-        obs_rng[0] + relativedelta(years=5),
+        obs_rng[0] + relativedelta(years=2),
         site_name.lower(),
         datatype_name.lower(),
     )
@@ -442,7 +492,7 @@ def get_comp_fig(
 
     layout = go.Layout(
         template="plotly_white",
-        title=(f"<b>{site_name} - {datatype_name} - {date_str}</b>".upper()),
+        title=(f"<b>{date_str} 24-Month Study and Colorado River Mid-term Modeling System (CRMMS) Modeling Results<br>{site_name} - {datatype_name}</b>".upper()),
         autosize=True,
         annotations=annotation,
         images=seal_image,
@@ -456,6 +506,7 @@ def get_comp_fig(
             range=initial_rng,
         ),
         hovermode="x unified",
+        #hovermode="closest",
         legend={"orientation": "v", "tracegroupgap": 6, "traceorder": "reversed"},
         margin=go.layout.Margin(l=50, r=50, b=5, t=50, pad=5),
         updatemenus=get_log_scale_dd(),

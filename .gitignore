@@ -137,6 +137,7 @@ dmypy.json
 
 # crmms viz folder
 /crmms_viz
+/crmms_viz_test
 
 # log files and folder
 /logs
@@ -152,3 +153,6 @@ dmypy.json
 /hdb_api
 hdb_config.json
 *config.json
+
+# pycharm stuff
+/.idea

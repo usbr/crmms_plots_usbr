@@ -61,7 +61,7 @@ def update_layout(fig, site_name, units, initial_rng, date_str, watermark=False)
 
     fig.update_layout(
         template="plotly_white",
-        title_text=(f"<b>{site_name} - {date_str}</b>".upper()),
+        title_text=(f"<b>{date_str} 24-Month Study and Colorado River Mid-term Modeling System (CRMMS) Modeling Results<br>{site_name}</b>".upper()),
         autosize=True,
         images=seal_image,
         yaxis1=dict(title=dict(text=f"{units[0]}", font=dict(size=11))),
@@ -92,7 +92,7 @@ def update_layout(fig, site_name, units, initial_rng, date_str, watermark=False)
             range=initial_rng,
         ),
         legend={"orientation": "v", "tracegroupgap": 6, "traceorder": "reversed"},
-        margin=go.layout.Margin(l=50, r=50, b=5, t=50, pad=5),
+        margin=go.layout.Margin(l=50, r=50, b=5, t=70, pad=5),
         hovermode="x unified",
     )
     return fig
