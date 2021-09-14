@@ -122,7 +122,7 @@ def create_subplot(
                 trace.showlegend = False
             if not trace.legendgroup == "crmms CLOUD":
                 trace.legendgroup = trace.name
-                if trace.name == "24MS MOST":
+                if trace.name == "24MS MOST PROB":
                     initial_rng[1] = trace.x[24]
                 if trace.name == "OBSERVED":
                     initial_rng[0] = trace.x[0]
