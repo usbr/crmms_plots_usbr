@@ -270,18 +270,18 @@ def check_suite_name(suite_name):
 def get_date_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split("_")]
-        date_str = f"{dt(date_arr[1], date_arr[0], 1):%B %Y} Modeling Results"
+        date_str = f"{dt(date_arr[1], date_arr[0], 1):%B %Y}"
     except Exception:
-        date_str = f"{suite_name} Modeling Results"
+        date_str = f"{suite_name}"
     return date_str
 
 
 def get_year_str(suite_name):
     try:
         date_arr = [int(i) for i in suite_name.split("_")]
-        year_str = f"{date_arr[1]} Modeling Results"
+        year_str = f"{date_arr[1]}"
     except Exception:
-        year_str = f"{suite_name} Modeling Results"
+        year_str = f"{suite_name}"
     return year_str
 
 
@@ -512,7 +512,7 @@ if __name__ == "__main__":
                         last_24ms_date = df_model['datetime'].max()
                         # trim the crmms-esp data to match the length of the 24ms data
                         df_slot = df_slot[df_slot['datetime'] <= last_24ms_date]
-                        df_model["trace"] = f"24MS {model_type.upper()}"
+                        df_model["trace"] = f"24MS {model_type.upper()} PROB"
 
                         df_slot = df_slot.append(
                             df_model, ignore_index=True, sort=False

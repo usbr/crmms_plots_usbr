@@ -144,9 +144,9 @@ def get_dash_body(site_name, site_id, chart_names):
           <a class="dropdown-item" href="../923/dashboard.html#overview" target="_blank">Lake Havasu</a>
           <a class="dropdown-item" href="../921/dashboard.html#overview" target="_blank">Lake Mead</a>
           <a class="dropdown-item" href="../922/dashboard.html#overview" target="_blank">Lake Mohave</a>
+          <a class="dropdown-item" href="../919/dashboard.html#overview" target="_blank">Lake Powell</a>
           <a class="dropdown-item" href="../914/dashboard.html#overview" target="_blank">Morrow Point</a>
           <a class="dropdown-item" href="../920/dashboard.html#overview" target="_blank">Navajo</a>
-          <a class="dropdown-item" href="../919/dashboard.html#overview" target="_blank">Lake Powell</a>
           <a class="dropdown-item" href="../912/dashboard.html#overview" target="_blank">Taylor Park</a>
           <a class="dropdown-item" href="../933/dashboard.html#overview" target="_blank">Vallecito</a>
         </div>
@@ -196,7 +196,19 @@ def get_dash_body(site_name, site_id, chart_names):
          </h6>
          <li class="nav-item">
            <a class="nav-link" data-toggle="tab" href="#help" role="tab">
-             <span data-feather="help-circle"></span>  HOW TO...</a>
+             <span data-feather="help-circle"></span> PLOT DESCRIPTION</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html#overview_m" role="tab">
+             <span data-feather="help-circle"></span> WHAT IS CRMMS?</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/model-info.html#future" role="tab">
+             <span data-feather="help-circle"></span> WHAT IS ESP?</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="https://www.usbr.gov/lc/region/g4000/riverops/crss-5year-projections.html" role="tab">
+             <span data-feather="trending-up"></span> 5-YEAR PROJECTIONS</a>
          </li>
         </ul>
       </div>

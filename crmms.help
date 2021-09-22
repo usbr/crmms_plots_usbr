@@ -72,9 +72,11 @@
             can be toggled on and off in the legend by clicking the individual 
             trace or statistic name. A double click on the legend will toggle 
             all traces on and off, except the clicked trace. The default chart 
-            shows observed data, the CRMMS-24MS Most Probable trace, the median 
-            CRMMS-ESP projection, and the 10th to 90th percentile of CRMMS-ESP 
-            traces, which are represented by the gray shaded region. The data 
+            shows observed data, the 24MS Minimum Probable, Most Probable, and
+             Maximum probable traces;
+            the full range (minimum to maximum) of CRMMS-ESP
+            traces, which are represented by the gray shaded region; and every
+             individual trace from CRMMS-ESP as gray lines. The data
             always represent end-of-month or monthly total values. The lines, 
             or traces, are described below: </p>
             <ul class="list-group list-group-flush">
@@ -82,8 +84,8 @@
                     <strong>Observed:</strong> &nbsp; Observations of variables 
                     represented in the chart for the 12 months preceding the run. 
                 <li class="list-group-item">
-                    <strong>CRMMS-24MS Traces:</strong> &nbsp; The 24MS Most Probable 
-                    trace (24MS Most) is shown every month. The Minimum and 
+                    <strong>24-Month Study</strong> &nbsp; The 24MS Most Probable
+                    trace (24MS Most Prob) is shown every month. The Minimum and
                     Maximum Probable are shown in January, April, August, October, 
                     and when necessary due to the Drought Response Operations 
                     Agreement. The Minimum and Maximum Probable 24MS projections 
@@ -98,7 +100,7 @@
                     and 10%, 25%, 75%, and 90% exceedance probabilities.
                 </li>
                 <li class="list-group-item">
-                    <strong>CRMMS-ESP Traces:</strong> &nbsp; CRMMS traces are 
+                    <strong>Individual Traces:</strong> &nbsp; CRMMS-ESP traces are
                     labeled by the historical year that informed the first year 
                     of the ESP hydrology trace. 
                 </li>
